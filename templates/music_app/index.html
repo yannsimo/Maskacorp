@@ -1,0 +1,883 @@
+ {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ artist.stage_name }} - {{ artist.slogan }}{% endblock %}
+
+{% block extra_css %}
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--gray-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.03"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.5;
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    margin: 0 auto 30px;
+    background: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: var(--primary-color);
+    box-shadow: 0 0 30px rgba(229, 0, 0, 0.3);
+    animation: glow 2s ease-in-out infinite alternate;
+    background-size: cover;
+    background-position: center;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 30px rgba(229, 0, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(229, 0, 0, 0.6); }
+}
+
+.artist-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.slogan {
+    font-size: 1.4rem;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+/* Sections */
+.section {
+    padding: 80px 0;
+}
+
+.bio-section {
+    background: var(--gray-dark);
+}
+
+.social-section {
+    background: var(--dark-bg);
+}
+
+.music-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.videos-section {
+    background: var(--gray-dark);
+}
+
+.buzz-section {
+    background: var(--white);
+    color: var(--dark-bg);
+}
+
+.contact-section {
+    background: var(--dark-bg);
+}
+
+.bio-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--text-light);
+}
+
+/* Grilles */
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.buzz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+/* Cards */
+.link-card {
+    background: linear-gradient(135deg, var(--gray-dark) 0%, #2a2a2a 100%);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.link-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(229, 0, 0, 0.2);
+}
+
+.link-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.link-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.link-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.link-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(229, 0, 0, 0.3);
+}
+
+.video-card {
+    background: var(--dark-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.video-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 200px;
+    background: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: var(--primary-color);
+    background-size: cover;
+    background-position: center;
+}
+
+.video-info {
+    padding: 20px;
+}
+
+.video-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.video-stats {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.video-platform {
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.buzz-card {
+    background: var(--gray-light);
+    padding: 30px;
+    border-radius: 15px;
+    border-left: 5px solid var(--primary-color);
+}
+
+.buzz-source {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.buzz-content {
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* Formulaire de contact */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--gray-dark);
+    border-radius: 8px;
+    background: var(--gray-dark);
+    color: var(--white);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.submit-btn {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(229, 0, 0, 0.3);
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Audio Player */
+.audio-player {
+    background: var(--gray-dark);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.audio-player audio {
+    width: 100%;
+    filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);
+}
+
+.challenge-btn {
+    background: linear-gradient(45deg, #ff1744, #ff6b00);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-block;
+    margin: 20px 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .artist-name {
+        font-size: 2.5rem;
+    }
+
+    .slogan {
+        font-size: 1.1rem;
+    }
+
+    .links-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .buzz-grid {
+        grid-template-columns: 1fr;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content fade-in">
+        <div class="profile-image" {% if artist.profile_image %}style="background-image: url('{{ artist.profile_image }}');"{% endif %}>
+            {% if not artist.profile_image %}
+                <i class="fas fa-microphone"></i>
+            {% endif %}
+        </div>
+        <h1 class="artist-name">{{ artist.stage_name|upper }}</h1>
+        <p class="slogan">
+            {{ artist.slogan|default:"Le rap sans filtre, 100% authentique." }}<br>
+            Découvre le phénomène viral <span class="hashtag">#RapAuTaff</span>
+        </p>
+    </div>
+</section>
+
+<!-- Bio Section -->
+<section class="section bio-section">
+    <div class="container">
+        <h2 class="section-title fade-in">L'Artiste</h2>
+        <p class="bio-text fade-in">
+            {{ artist.bio|default:"Kesh, c'est le rappeur qui a retourné TikTok avec ses freestyles authentiques, révélés sur les lieux de travail, mais qui ne s'arrête pas là. Porté par un buzz massif et des milliers de commentaires, Kesh incarne un rap vrai, sans filtre, qui parle à tout le monde." }}
+            <br><br>Rejoins le mouvement ! <span class="hashtag">#RapAuTaff #KeshFamily</span>
+        </p>
+    </div>
+</section>
+
+<!-- Social Links -->
+{% if social_links %}
+<section class="section social-section" id="social">
+    <div class="container">
+        <h2 class="section-title">Suivez {{ artist.stage_name }}</h2>
+        <div class="links-grid">
+            {% for social in social_links %}
+            <div class="link-card fade-in">
+                <div class="link-icon">
+                    <i class="{{ social.icon|default:'fab fa-'|add:social.platform }}"></i>
+                </div>
+                <h3 class="link-title">{{ social.get_platform_display }}</h3>
+                <p>
+                    {% if social.platform == 'tiktok' %}Découvre les freestyles viraux
+                    {% elif social.platform == 'instagram' %}Behind the scenes & stories
+                    {% elif social.platform == 'youtube' %}Clips officiels & exclus
+                    {% elif social.platform == 'facebook' %}Actualités & événements
+                    {% elif social.platform == 'snapchat' %}Moments authentiques
+                    {% else %}Suis {{ artist.stage_name }}
+                    {% endif %}
+                </p>
+                <a href="{{ social.url }}" class="link-btn" target="_blank" onclick="trackClick('social', {{ social.id }})">
+                    <i class="fas fa-external-link-alt"></i>
+                    {% if social.platform == 'youtube' %}S'abonner
+                    {% elif social.platform == 'snapchat' %}Ajouter
+                    {% else %}Suivre
+                    {% endif %}
+                </a>
+            </div>
+            {% endfor %}
+
+            <!-- Challenge Card -->
+            {% if challenges %}
+            {% for challenge in challenges %}
+            <div class="link-card fade-in">
+                <div class="link-icon">
+                    <i class="fas fa-hashtag"></i>
+                </div>
+                <h3 class="link-title">Challenge {{ challenge.hashtag }}</h3>
+                <p>{{ challenge.description|truncatewords:10 }}</p>
+                <a href="{{ challenge.tiktok_url|default:challenge.video_url }}" class="challenge-btn" target="_blank">
+                    <i class="fas fa-fire"></i> Participer
+                </a>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Music Platforms -->
+{% if music_platforms %}
+<section class="section music-section" id="music">
+    <div class="container">
+        <h2 class="section-title">Écouter {{ artist.stage_name }}</h2>
+        <div class="links-grid">
+            {% for platform in music_platforms %}
+            <div class="link-card fade-in">
+                <div class="link-icon">
+                    <i class="{{ platform.icon|default:'fas fa-music' }}"></i>
+                </div>
+                <h3 class="link-title">{{ platform.get_platform_display }}</h3>
+                <p>
+                    {% if platform.platform == 'spotify' %}Playlists & dernières sorties
+                    {% elif platform.platform == 'apple_music' %}Albums & singles
+                    {% elif platform.platform == 'deezer' %}Streaming haute qualité
+                    {% else %}Écoute {{ artist.stage_name }}
+                    {% endif %}
+                </p>
+                <a href="{{ platform.url }}" class="link-btn" target="_blank" onclick="trackClick('music', {{ platform.id }})">
+                    <i class="fas fa-play"></i> Écouter
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Latest Release -->
+{% if latest_release %}
+<section class="section videos-section">
+    <div class="container">
+        <h2 class="section-title">Dernière Nouveauté</h2>
+        <div class="videos-grid">
+            <div class="video-card fade-in" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+                <div class="video-thumbnail" {% if latest_release.cover_image %}style="background-image: url('{{ latest_release.cover_image }}');"{% endif %}>
+                    {% if not latest_release.cover_image %}
+                        <i class="fas fa-music"></i>
+                    {% endif %}
+                </div>
+                <div class="video-info">
+                    <div class="video-platform">{{ latest_release.get_release_type_display }}</div>
+                    <h3 class="video-title">{{ latest_release.title }}</h3>
+                    <p style="color: var(--text-light); margin: 10px 0;">{{ latest_release.description|truncatewords:20 }}</p>
+                    <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
+                        {% if latest_release.spotify_url %}
+                        <a href="{{ latest_release.spotify_url }}" target="_blank" class="link-btn" style="margin: 0;">
+                            <i class="fab fa-spotify"></i>
+                        </a>
+                        {% endif %}
+                        {% if latest_release.apple_music_url %}
+                        <a href="{{ latest_release.apple_music_url }}" target="_blank" class="link-btn" style="margin: 0;">
+                            <i class="fab fa-apple"></i>
+                        </a>
+                        {% endif %}
+                        {% if latest_release.youtube_url %}
+                        <a href="{{ latest_release.youtube_url }}" target="_blank" class="link-btn" style="margin: 0;">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Audio -->
+{% if featured_audio %}
+<section class="section bio-section">
+    <div class="container">
+        <h2 class="section-title">Sons du Moment</h2>
+        <div class="links-grid">
+            {% for audio in featured_audio %}
+            <div class="link-card fade-in">
+                <div class="link-icon">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <h3 class="link-title">{{ audio.title }}</h3>
+                <p>{{ audio.get_audio_type_display }} • {{ audio.duration|default:"" }}</p>
+                {% if audio.audio_file %}
+                <div class="audio-player">
+                    <audio controls preload="none">
+                        <source src="{{ audio.audio_file.url }}" type="audio/mpeg">
+                        Votre navigateur ne supporte pas l'audio.
+                    </audio>
+                </div>
+                {% endif %}
+                <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
+                    {% if audio.spotify_url %}
+                    <a href="{{ audio.spotify_url }}" target="_blank" class="link-btn" style="margin: 0; padding: 8px 16px;" onclick="trackClick('audio', {{ audio.id }})">
+                        <i class="fab fa-spotify"></i>
+                    </a>
+                    {% endif %}
+                    {% if audio.apple_music_url %}
+                    <a href="{{ audio.apple_music_url }}" target="_blank" class="link-btn" style="margin: 0; padding: 8px 16px;" onclick="trackClick('audio', {{ audio.id }})">
+                        <i class="fab fa-apple"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Viral Videos -->
+{% if featured_videos %}
+<section class="section videos-section" id="videos">
+    <div class="container">
+        <h2 class="section-title">Vidéos Virales</h2>
+        <div class="videos-grid">
+            {% for video in featured_videos %}
+            <div class="video-card fade-in" onclick="openVideo('{{ video.video_url }}', {{ video.id }})">
+                <div class="video-thumbnail" {% if video.thumbnail %}style="background-image: url('{{ video.thumbnail }}');"{% endif %}>
+                    {% if not video.thumbnail %}
+                        <i class="fas fa-play"></i>
+                    {% endif %}
+                </div>
+                <div class="video-info">
+                    <div class="video-platform">{{ video.get_platform_display }}</div>
+                    <h3 class="video-title">{{ video.title }}</h3>
+                    <div class="video-stats">
+                        <span><i class="fas fa-eye"></i> {{ video.views_count|floatformat:0 }} vues</span>
+                        <span><i class="fas fa-heart"></i> {{ video.likes_count|floatformat:0 }} likes</span>
+                    </div>
+                    {% if video.hashtags %}
+                    <p style="color: var(--primary-color); margin-top: 10px; font-size: 0.9rem;">{{ video.hashtags }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Bouton pour voir plus de vidéos -->
+        <div style="text-align: center; margin-top: 40px;">
+            <button onclick="loadMoreVideos()" class="link-btn" id="loadMoreVideosBtn">
+                <i class="fas fa-plus"></i> Voir plus de vidéos
+            </button>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Buzz Section -->
+{% if buzz_content %}
+<section class="section buzz-section" id="buzz">
+    <div class="container">
+        <h2 class="section-title">Le Buzz</h2>
+        <div class="buzz-grid">
+            {% for buzz in buzz_content %}
+            <div class="buzz-card fade-in">
+                <div class="buzz-source">{{ buzz.source }} - {{ buzz.get_content_type_display }}</div>
+                <p class="buzz-content">{{ buzz.content }}</p>
+                {% if buzz.engagement_count > 0 %}
+                <p style="margin-top: 15px; font-weight: 600; color: var(--primary-color);">
+                    {{ buzz.engagement_count }} interactions
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact Section -->
+<section class="section contact-section" id="contact">
+    <div class="container">
+        <h2 class="section-title">Contact Pro</h2>
+        <form class="contact-form fade-in" id="contactForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Nom *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Type de demande *</label>
+                <select id="type" name="message_type" required>
+                    <option value="">Sélectionnez...</option>
+                    <option value="booking">Booking</option>
+                    <option value="collaboration">Collaboration</option>
+                    <option value="media">Média</option>
+                    <option value="other">Autre</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Sujet *</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <i class="fas fa-paper-plane"></i> Envoyer le message
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+// Variables pour la pagination des vidéos
+let currentVideoPage = 1;
+let loadingVideos = false;
+
+// Gestion du formulaire de contact
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerHTML;
+
+    btn.innerHTML = '<div class="spinner"></div> Envoi en cours...';
+    btn.disabled = true;
+
+    fetch(window.djangoUrls.contactSubmit, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': window.csrfToken,
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            btn.innerHTML = '<i class="fas fa-check"></i> Message envoyé !';
+            btn.style.background = '#28a745';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+                this.reset();
+            }, 3000);
+
+            // Afficher un message de succès
+            showMessage('Votre message a été envoyé avec succès !', 'success');
+        } else {
+            btn.innerHTML = '<i class="fas fa-times"></i> Erreur, réessayez';
+            btn.style.background = '#dc3545';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+            }, 3000);
+
+            showMessage('Erreur lors de l\'envoi. Veuillez réessayer.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        btn.innerHTML = '<i class="fas fa-times"></i> Erreur réseau';
+        btn.style.background = '#dc3545';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 3000);
+
+        showMessage('Erreur de connexion. Vérifiez votre internet.', 'error');
+    });
+});
+
+// Fonction pour ouvrir une vidéo
+function openVideo(url, videoId) {
+    if (url) {
+        trackClick('video', videoId);
+        window.open(url, '_blank');
+    }
+}
+
+// Fonction pour charger plus de vidéos
+function loadMoreVideos() {
+    if (loadingVideos) return;
+
+    loadingVideos = true;
+    const btn = document.getElementById('loadMoreVideosBtn');
+    const originalText = btn.innerHTML;
+
+    btn.innerHTML = '<div class="spinner"></div> Chargement...';
+    btn.disabled = true;
+
+    fetch(`${window.djangoUrls.apiVideos}?page=${currentVideoPage + 1}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.videos && data.videos.length > 0) {
+                const videosGrid = document.querySelector('.videos-grid');
+
+                data.videos.forEach(video => {
+                    const videoCard = createVideoCard(video);
+                    videosGrid.appendChild(videoCard);
+                });
+
+                currentVideoPage++;
+
+                // Cacher le bouton s'il n'y a plus de pages
+                if (!data.has_next) {
+                    btn.style.display = 'none';
+                }
+            } else {
+                btn.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showMessage('Erreur lors du chargement des vidéos', 'error');
+        })
+        .finally(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            loadingVideos = false;
+        });
+}
+
+// Fonction pour créer un élément vidéo
+function createVideoCard(video) {
+    const card = document.createElement('div');
+    card.className = 'video-card fade-in';
+    card.onclick = () => openVideo(video.video_url, video.id);
+
+    card.innerHTML = `
+        <div class="video-thumbnail" ${video.thumbnail ? `style="background-image: url('${video.thumbnail}');"` : ''}>
+            ${!video.thumbnail ? '<i class="fas fa-play"></i>' : ''}
+        </div>
+        <div class="video-info">
+            <div class="video-platform">${video.platform_display}</div>
+            <h3 class="video-title">${video.title}</h3>
+            <div class="video-stats">
+                <span><i class="fas fa-eye"></i> ${video.views_count} vues</span>
+                <span><i class="fas fa-heart"></i> ${video.likes_count} likes</span>
+            </div>
+            ${video.hashtags ? `<p style="color: var(--primary-color); margin-top: 10px; font-size: 0.9rem;">${video.hashtags}</p>` : ''}
+        </div>
+    `;
+
+    return card;
+}
+
+// Gestion des lecteurs audio (une seule lecture à la fois)
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.addEventListener('play', function() {
+            // Mettre en pause tous les autres audios
+            document.querySelectorAll('audio').forEach(otherAudio => {
+                if (otherAudio !== this) {
+                    otherAudio.pause();
+                }
+            });
+        });
+
+        // Lazy loading pour les audios
+        audio.addEventListener('canplay', function() {
+            this.setAttribute('data-loaded', 'true');
+        });
+    });
+});
+
+// Fonction pour afficher des messages
+function showMessage(text, type = 'info') {
+    const messagesContainer = document.querySelector('.messages') || createMessagesContainer();
+
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = text;
+
+    messagesContainer.appendChild(alert);
+
+    // Supprimer le message après 5 secondes
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
+}
+
+// Créer le conteneur de messages s'il n'existe pas
+function createMessagesContainer() {
+    const container = document.createElement('div');
+    container.className = 'messages';
+    document.body.appendChild(container);
+    return container;
+}
+
+// Preload des images importantes pour une meilleure performance
+document.addEventListener('DOMContentLoaded', function() {
+    {% if artist.profile_image %}
+    const profileImg = new Image();
+    profileImg.src = '{{ artist.profile_image }}';
+    {% endif %}
+
+    {% if latest_release.cover_image %}
+    const releaseImg = new Image();
+    releaseImg.src = '{{ latest_release.cover_image }}';
+    {% endif %}
+
+    // Lazy loading pour les thumbnails de vidéos
+    const videoThumbnails = document.querySelectorAll('.video-thumbnail[style*="background-image"]');
+    videoThumbnails.forEach(thumbnail => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // L'image est déjà chargée via CSS background-image
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        observer.observe(thumbnail);
+    });
+});
+
+// Gestion du scroll pour les animations
+window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const parallaxElements = document.querySelectorAll('.hero::before');
+
+    parallaxElements.forEach(element => {
+        const speed = 0.5;
+        element.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+});
+{% endblock %}
